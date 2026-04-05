@@ -1,0 +1,300 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "api-mono"
+  },
+  "servers": [
+    {
+      "url": "/api",
+      "description": "API endpoints (all routes prefixed with /api)"
+    }
+  ],
+  "paths": {
+    "/health": {
+      "get": {
+        "tags": [
+          "Health"
+        ],
+        "summary": "Get health",
+        "operationId": "healthGet",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "http": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "406": {
+            "description": "Not Acceptable"
+          }
+        },
+        "x-request-definitions": {},
+        "x-response-definitions": {
+          "200": "Health"
+        }
+      },
+      "endpointName": "health",
+      "groupName": "health"
+    }
+  },
+  "components": {
+    "parameters": {
+      "PathId": {
+        "in": "path",
+        "name": "id",
+        "schema": {
+          "type": "string"
+        },
+        "required": true,
+        "description": "ID of object to fetch"
+      },
+      "PathRoleName": {
+        "in": "path",
+        "name": "roleName",
+        "schema": {
+          "type": "string"
+        },
+        "required": true,
+        "description": "Name of the role"
+      },
+      "QueryCreatedAtFrom": {
+        "in": "query",
+        "name": "createdAtFrom",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "description": "Filter results created on or after this date",
+        "example": "2024-01-01T00:00:00Z"
+      },
+      "QueryCreatedAtTo": {
+        "in": "query",
+        "name": "createdAtTo",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "description": "Filter results created on or before this date",
+        "example": "2024-12-31T23:59:59Z"
+      },
+      "QueryDateFrom": {
+        "in": "query",
+        "name": "dateFrom",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "description": "date from"
+      },
+      "QueryDateTo": {
+        "in": "query",
+        "name": "dateTo",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "description": "date to"
+      },
+      "QueryEmail": {
+        "in": "query",
+        "name": "email",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "minLength": 2
+        },
+        "description": "Email search term (minimum 2 characters)",
+        "example": "john@"
+      },
+      "QueryEndDate": {
+        "name": "endDate",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "description": "Filter logs until this date"
+      },
+      "QueryLimit": {
+        "in": "query",
+        "name": "limit",
+        "required": false,
+        "schema": {
+          "type": "integer",
+          "default": 25,
+          "minimum": 0,
+          "maximum": 100
+        },
+        "description": "Max number of results returned"
+      },
+      "QueryOffset": {
+        "in": "query",
+        "name": "offset",
+        "required": false,
+        "schema": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "description": "The number of items to skip before starting to collect the result set"
+      },
+      "QueryRole": {
+        "name": "role",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string"
+        },
+        "description": "Filter by role name"
+      },
+      "QuerySearch": {
+        "in": "query",
+        "name": "search",
+        "required": false,
+        "schema": {
+          "type": "string"
+        },
+        "description": "Search term",
+        "example": "John"
+      },
+      "QueryStartDate": {
+        "name": "startDate",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "description": "Filter logs from this date"
+      },
+      "QueryStatus": {
+        "name": "status",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "enum": [
+            "active",
+            "inactive"
+          ]
+        },
+        "description": "Filter by member status"
+      },
+      "QueryUpdatedAtFrom": {
+        "in": "query",
+        "name": "updatedAtFrom",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "description": "Filter results updated on or after this date",
+        "example": "2024-01-01T00:00:00Z"
+      },
+      "QueryUpdatedAtTo": {
+        "in": "query",
+        "name": "updatedAtTo",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "description": "Filter results updated on or before this date",
+        "example": "2024-12-31T23:59:59Z"
+      },
+      "QueryUserId": {
+        "in": "query",
+        "name": "userId",
+        "schema": {
+          "type": "string"
+        },
+        "required": false,
+        "description": "Filter apps based on user's access permissions (role, location, etc.)"
+      }
+    },
+    "schemas": {
+      "GenericDeleteSuccess": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "default": true
+          }
+        }
+      },
+      "GenericSearchMeta": {
+        "type": "object",
+        "properties": {
+          "totalResultCount": {
+            "type": "number"
+          },
+          "offset": {
+            "type": "number"
+          },
+          "limit": {
+            "type": "number"
+          }
+        }
+      },
+      "Health": {
+        "type": "object",
+        "properties": {
+          "http": {
+            "type": "boolean"
+          }
+        }
+      }
+    }
+  },
+  "interfaces": [
+    {
+      "name": "GenericDeleteSuccess",
+      "content": {
+        "outputString": "\nexport interface GenericDeleteSuccess {\n    success?: boolean;\n}\n\n"
+      }
+    },
+    {
+      "name": "GenericSearchMeta",
+      "content": {
+        "outputString": "\nexport interface GenericSearchMeta {\n    limit?:            number;\n    offset?:           number;\n    totalResultCount?: number;\n}\n\n"
+      }
+    },
+    {
+      "name": "Health",
+      "content": {
+        "outputString": "\nexport interface Health {\n    http?: boolean;\n}\n\n"
+      }
+    }
+  ],
+  "operationIds": [],
+  "basePath": "/api",
+  "groupNamesWithFirstUrlSegment": {
+    "health": "health"
+  },
+  "endpoints": [
+    "health"
+  ]
+}

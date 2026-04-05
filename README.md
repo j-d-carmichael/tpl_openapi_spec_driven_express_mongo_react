@@ -1,8 +1,30 @@
-# Cera App Template
+# App Template
 
-A full-stack application template using an API-first development workflow. The backend is an Express/TypeScript API generated from an OpenAPI specification. The frontend is a React app that consumes auto-generated API clients via a pnpm workspace.
+## Getting Started
 
-This template is designed to sit behind **Google Cloud IAP** (Identity-Aware Proxy) in production, with a seamless local development mode that bypasses IAP entirely.
+Before anything else you need two (free) accounts:
+
+1. **MongoDB Atlas** — [mongodb.com/atlas](https://www.mongodb.com/atlas) — create a free shared cluster and grab the connection credentials
+2. **WorkOS** — [workos.com](https://workos.com/) — sign up, create an application, and note the API key, client ID, and redirect URI
+
+Then:
+
+```bash
+make setup          # creates .env from .env.example
+```
+
+Open `.env` and fill in your **MongoDB** and **WorkOS** credentials:
+
+| Variable | Where to find it |
+|---|---|
+| `MONGO_HOST` | Atlas connection string host |
+| `MONGO_USER` / `MONGO_PW` | Atlas database user credentials |
+| `WORKOS_API_KEY` | WorkOS Dashboard → API Keys |
+| `WORKOS_CLIENT_ID` | WorkOS Dashboard → Environment → Client ID |
+| `WORKOS_COOKIE_PASSWORD` | Any 32+ character secret you generate |
+| `WORKOS_REDIRECT_URI` | Must match what you set in WorkOS (default `http://localhost:8080/auth/callback`) |
+
+See the [Makefile](./Makefile) for all available commands and the [API README](./apis/api-mono/api/README.md) for full details on authentication, database, email, permissions, and more.
 
 ## Project Structure
 
@@ -28,24 +50,16 @@ This template is designed to sit behind **Google Cloud IAP** (Identity-Aware Pro
     └── users/                  # React app (Vite + MUI + Zustand)
 ```
 
-## Getting Started
+## Running the App
 
-### 1. Setup
-
-```bash
-make setup        # Creates .env from .env.example
-```
-
-Edit `.env` with your MongoDB credentials and any other config.
-
-### 2. Install frontend dependencies
+### 1. Install frontend dependencies
 
 ```bash
 cd frontends
 pnpm install
 ```
 
-### 3. Start everything
+### 2. Start the backend
 
 ```bash
 make up           # Starts nginx, api-mono, and mailhog
@@ -56,7 +70,7 @@ This brings up:
 - **API** — Express server (hot-reloads via tsc-watch)
 - **Mailhog** — dev email UI on `http://localhost:8025`
 
-### 4. Start the React app
+### 3. Start the React app
 
 ```bash
 cd frontends/users
@@ -76,31 +90,9 @@ The React app calls the API through nginx at `http://localhost:8999`.
 | `make logs`  | Tail logs from all services          |
 | `make reset` | Stop, remove volumes, and restart    |
 
-## Authentication: IAP vs Local Dev
+## Authentication
 
-### Production (IAP enabled)
-
-In production, the app sits behind **Google Cloud IAP**. IAP handles authentication and injects a signed JWT (`x-goog-iap-jwt-assertion`) into every request. The API validates this JWT, extracts user data, and creates/finds the user and session automatically.
-
-Set in your production environment:
-```
-IAP_ENABLED=true
-GCP_PROJECT_NUMBER=<your-project-number>
-GCP_BACKEND_SERVICE_ID=<your-backend-service-id>
-```
-
-### Local Development (IAP disabled)
-
-Locally, IAP is bypassed entirely. The **dev auto-seed** mechanism creates a fake dev user and session for every request so you can develop without any IAP infrastructure.
-
-Set in `.env`:
-```
-NODE_ENV=development
-IAP_ENABLED=false
-IAP_DEV_AUTO_SEED=true
-```
-
-The dev user is defined in `apis/api-mono/api/src/config.ts` and defaults to `dev@temp-local-only.invalid`.
+The API uses [WorkOS AuthKit](https://workos.com/docs/authkit) for authentication via sealed session cookies. See the [API README](./apis/api-mono/api/README.md#authentication--workos-authkit) for full details on auth routes, accessing the authenticated user, and WorkOS Dashboard setup.
 
 ## Frontend Workspace
 

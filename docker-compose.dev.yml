@@ -1,0 +1,48 @@
+services:
+  # STANDARD: Mailhog for dev email purposes
+  mailhog:
+    container_name: ${IMAGE_PREFIX}mailhog-dev
+    image: mailhog/mailhog
+    deploy:
+      resources:
+        limits:
+          memory: 500M
+    ports:
+      - 1025:1025 # smtp server
+      - 8025:8025 # web ui
+    networks:
+      - shared_network
+
+  # STANDARD: Nginx service
+  nginx:
+    container_name: ${IMAGE_PREFIX}nginx-dev
+    image: nginx:1.21.3-alpine
+    ports:
+      - 8999:80
+    volumes:
+      - ./nginx/conf.dev.d:/etc/nginx/conf.d
+    networks:
+      - shared_network
+    depends_on:
+      api-mono:
+        condition: service_started
+
+  # APP-SPECIFIC: The monolithic api for this app
+  api-mono:
+    container_name: ${IMAGE_PREFIX}api-mono-dev
+    image: ${IMAGE_PREFIX}mono:latest
+    env_file:
+      - .env
+    build:
+      context: apis/api-mono/api/
+      target: dev
+    working_dir: /code
+    volumes:
+      - ./apis/api-mono/api:/code
+      - /code/node_modules
+    command: watch
+    networks:
+      - shared_network
+
+networks:
+  shared_network:
