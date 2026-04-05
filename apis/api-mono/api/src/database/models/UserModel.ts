@@ -23,6 +23,9 @@ export class UserClass /* implements User */ {
   @prop({ required: true, index: true })
   email!: string;
 
+  @prop({ index: true, unique: true, sparse: true })
+  externalId?: string;
+
   @prop({ required: true })
   firstName!: string;
 

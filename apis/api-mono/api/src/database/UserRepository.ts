@@ -47,6 +47,26 @@ class UserRepository extends BaseRepository<UserClass> {
   update(input: { _id: string; updates: Partial<UserClass> }) {
     return this.model.findByIdAndUpdate(input._id, input.updates, { new: true });
   }
+
+  upsertFromWorkOS(workosUser: { id: string; email: string; firstName: string | null; lastName: string | null; profilePictureUrl: string | null }) {
+    return this.model.findOneAndUpdate(
+      { externalId: workosUser.id },
+      {
+        $set: {
+          email: workosUser.email,
+          firstName: workosUser.firstName || '',
+          lastName: workosUser.lastName || '',
+          avatar: workosUser.profilePictureUrl || undefined,
+        },
+        $setOnInsert: {
+          externalId: workosUser.id,
+          createdBy: workosUser.id,
+          roles: [],
+        },
+      },
+      { upsert: true, new: true },
+    );
+  }
 }
 
 export default new UserRepository();

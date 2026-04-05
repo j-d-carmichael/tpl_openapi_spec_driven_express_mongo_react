@@ -1,6 +1,7 @@
 import express from 'express';
 import NodegenRequest from '@/http/interfaces/NodegenRequest';
 import WorkOsService from '@/services/WorkOsService';
+import UserRepository from '@/database/UserRepository';
 
 export interface ValidateRequestOptions {
   passThruWithoutJWT: boolean;
@@ -69,6 +70,7 @@ class AccessTokenService {
         req.workosUser = authResult.user;
         req.jwtData = authResult.user;
         req.originalToken = sessionData;
+        await this.upsertUser(authResult.user);
         return next();
       }
 
@@ -101,6 +103,7 @@ class AccessTokenService {
           req.workosUser = refreshedAuth.user;
           req.jwtData = refreshedAuth.user;
           req.originalToken = sealedSession;
+          await this.upsertUser(refreshedAuth.user);
           return next();
         }
 
@@ -111,6 +114,14 @@ class AccessTokenService {
       }
     } catch (error) {
       return this.denyRequest(res, String(error), 'Authentication failed.');
+    }
+  }
+
+  private async upsertUser (workosUser: { id: string; email: string; firstName: string | null; lastName: string | null; profilePictureUrl: string | null }): Promise<void> {
+    try {
+      await UserRepository.upsertFromWorkOS(workosUser);
+    } catch (e) {
+      console.error('AccessTokenService: failed to upsert user', e);
     }
   }
 }
