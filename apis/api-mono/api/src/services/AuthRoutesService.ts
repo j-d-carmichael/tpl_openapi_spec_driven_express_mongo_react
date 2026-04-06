@@ -50,6 +50,34 @@ router.get('/callback', async (req, res) => {
 });
 
 /**
+ * GET /auth/session
+ *
+ * Returns the authenticated user from the sealed session cookie.
+ * Used by the frontend to check login status since the wos-session
+ * cookie is httpOnly and invisible to JavaScript.
+ */
+router.get('/session', async (req, res) => {
+  const sessionData = req.cookies?.['wos-session'];
+
+  if (!sessionData) {
+    return res.status(401).json({ authenticated: false });
+  }
+
+  try {
+    const session = WorkOsService.loadSealedSession(sessionData);
+    const result = await session.authenticate();
+
+    if (result.authenticated) {
+      return res.json({ authenticated: true, user: result.user });
+    }
+
+    return res.status(401).json({ authenticated: false });
+  } catch {
+    return res.status(401).json({ authenticated: false });
+  }
+});
+
+/**
  * POST /auth/logout
  *
  * Ends the WorkOS session and clears the session cookie.

@@ -100,7 +100,7 @@ export default class HttpService {
     return axiosConfig;
   }
 
-  static async handle401 (err: any) {
+  static handle401 (err: any) {
     if (
       err.response?.status === 401 &&
       !HttpService.isLogoutRoute(err.request?.responseURL || '')
@@ -109,13 +109,13 @@ export default class HttpService {
       if (HttpService.on401ErrorNotification) {
         HttpService.on401ErrorNotification();
       }
-      await AuthService.logout(HttpService.baseApiUrl);
+      AuthService.logout(HttpService.baseApiUrl);
     }
     return Promise.reject(err);
   }
 
-  static async logout (): Promise<void> {
-    await AuthService.logout(HttpService.baseApiUrl);
+  static logout (): void {
+    AuthService.logout(HttpService.baseApiUrl);
   }
 
   static handle500 (err: any) {

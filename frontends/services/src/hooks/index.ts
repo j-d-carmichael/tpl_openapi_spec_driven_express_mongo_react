@@ -5,9 +5,3 @@
  * different frontend applications with their own state management.
  */
 
-export {
-  useHasPermissionGroup,
-  useHasPermissionGroups,
-  useHasAnyPermissionGroup,
-  useHasAllPermissionGroups,
-} from './useHasPermissionGroup';
