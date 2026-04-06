@@ -50,7 +50,7 @@ components:
           '/_admin/**'
         ],
         content: {
-          'x-async-validators': [ 'isSidekickAdmin' ],
+          'x-async-validators': [ 'isAdmin' ],
           'x-passRequest': true
         }
       }
