@@ -46,33 +46,10 @@ components:
     },
     {
       toAllOperations: {
-        includeOnlyPaths: [
-          '/_admin/**'
-        ],
-        content: {
-          'x-async-validators': [ 'isAdmin' ],
-          'x-passRequest': true
-        }
-      }
-    },
-    {
-      toAllOperations: {
         excludePaths: [
           '/health'
         ],
         content: {
-          'x-permission': '{{ routePermission( {removeMethod: true} ) }}'
-        }
-      }
-    },
-    {
-      toAllOperations: {
-        excludePaths: [
-          '/health',
-          '/_admin/**'
-        ],
-        content: {
-          'x-async-validators': [ 'companyCheck' ],
           'x-passRequest': true
         }
       }
