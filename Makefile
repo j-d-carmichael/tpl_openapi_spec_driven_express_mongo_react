@@ -2,8 +2,15 @@ COMPOSE_FILE := docker-compose.dev.yml
 
 .PHONY: setup up down logs reset
 
-## First-time setup: install mkcert, generate trusted certs, create .env
+## First-time setup: ensure pnpm, install deps, create .env
 setup:
+	@command -v pnpm >/dev/null 2>&1 || { echo "[INFO] Installing pnpm..."; npm i -g pnpm; }
+	@echo "[INFO] Installing frontend dependencies..."
+	cd frontends && pnpm install
+	@echo "[INFO] Installing API dependencies..."
+	cd apis/api-mono/api && npm install
+	@echo "[INFO] Installing API spec dependencies..."
+	cd apis/api-mono/api-spec && npm install
 	@if [ ! -f .env ]; then \
 		cp .env.example .env; \
 		echo "[INFO] Created .env from .env.example — edit it with your credentials"; \
