@@ -2,7 +2,6 @@ import config from '@/config';
 import express from 'express';
 import authRoutes from '@/services/AuthRoutesService';
 import healthRoutes from './routes/healthRoutes';
-import userRoutes from './routes/userRoutes';
 
 export interface RoutesImporter {
   basePath?: string
@@ -17,7 +16,5 @@ export default function (app: express.Application, options: RoutesImporter = {ba
   app.use(basePath + '/auth', authRoutes);
 
   app.use(basePath + '/health', healthRoutes());
-
-  app.use(basePath + '/user', userRoutes());
 
   }

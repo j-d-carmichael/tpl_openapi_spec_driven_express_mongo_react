@@ -3,9 +3,10 @@ import express from 'express';
 import healthValidators from '../validators/healthValidators';
 import HealthDomain from '../../../domains/HealthDomain';
 import healthTransformOutputs from '../transformOutputs/healthTransformOutput';
+import GenerateItExpressResponse from '@/http/nodegen/interfaces/GenerateItExpressResponse';
 
 export default function () {
-  const router = Router();
+  const router = express.Router();
 
   /**
    * Operation ID: healthGet
