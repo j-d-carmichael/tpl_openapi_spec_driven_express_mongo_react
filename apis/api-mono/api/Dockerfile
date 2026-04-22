@@ -1,3 +1,11 @@
+# --- Stage: Dev (used by docker-compose.dev.yml) ---
+FROM node:20 AS dev
+WORKDIR /code
+COPY ./docker-entrypoint.sh /sbin/
+RUN chmod 755 /sbin/docker-entrypoint.sh
+ENTRYPOINT [ "/sbin/docker-entrypoint.sh" ]
+CMD ["watch"]
+
 # --- Stage 1: Build frontend apps ---
 FROM node:20 AS frontend-build
 RUN corepack enable
